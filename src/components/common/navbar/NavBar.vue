@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name:"navbar"
+    name:"navbar",
 }
 </script>
 
@@ -18,6 +18,7 @@ export default {
     line-height: 44px;
     height: 44px;
     text-align: center;
+    box-shadow: 0 0px 3px 0px rgba(0, 0, 0, .2);
 }
 
 .left,.right{

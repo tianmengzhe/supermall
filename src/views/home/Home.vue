@@ -1,8 +1,11 @@
 <template>
   <div>
-    <nav-bar>
-      <div slot="center">cneter</div>
-    </nav-bar>
+    <div class="home-nav">
+      <nav-bar>
+        <div slot="center">cneter</div>
+      </nav-bar>
+    </div>
+    
     
   </div>
 </template>
@@ -15,6 +18,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .home-nav{
+    background-color: var(--color-tint);
+    color: white;
+  }
 </style>
