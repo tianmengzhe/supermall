@@ -40,7 +40,10 @@ export default {
     },
     methods:{
         itemClick(){
-            this.$router.push({name:this.path})
+            // 防止重复导航  避免到当前位置的冗余导航
+            // onComplete => {},
+            // onAbort => {}
+            this.$router.push({name:this.path},onComplete => {},onAbort => {})
         }
     }
 };
