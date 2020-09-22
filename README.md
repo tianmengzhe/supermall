@@ -19,6 +19,39 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
+
+### 滚动 better-scroll
+重点解决移动端（已支持 PC）各种滚动场景需求的插件
+github： https://github.com/ustbhuangyi/better-scroll
+docs： https://better-scroll.github.io/docs/zh-CN/guide/ 
+
+#### 基本使用
+```javascript
+<div class="scroll" ref="wrapper">
+    // 容器里面的内容只能有一个
+    <ul>
+        <li></li> *100
+    <ul>
+</div>
+
+mounted(){
+    // '.scroll'
+    // document.querySelector('.scroll')
+    // this.$refs.wrapper
+    this.bScroll = new BScroll(this.$refs.wrapper, {
+        scrollY: true
+    });
+}
+
+.scroll {
+  height: 200px;
+  border: 1px solid red;
+  overflow: hidden;
+}
+```
+
+
+
 新的 思路
 
 前端 vue-cli3

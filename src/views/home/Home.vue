@@ -1,168 +1,502 @@
 <template>
   <div class="home">
     <div class="home-nav">
-      <nav-bar>
-        <div slot="center">购物街</div>
-      </nav-bar>
+      <nav-bar><div slot="center">购物街</div></nav-bar>
     </div>
 
-    <home-swiper />
-    <recommend-view />
-    
-    <feature />
+ 
+    <scroll ref="homeScroll" class="homeContent" >
 
-    <tab-control class="tab-control" :titles="titles" @typeClick="typeClick" />
-    <goods-list :goods="list" />
+      <home-swiper />
+      <recommend-view />
+      <feature />
+      <tab-control class="tab-control" :titles="titles" @typeClick="typeClick" />
+      <goods-list :goods="list" />    
 
+    </scroll>
+
+    <back-top @click.native="topClick" />
     <!-- 
       数据展示设计
       
-     -->
-
-
+    -->
   </div>
 </template>
 
 <script>
+import NavBar from "components/common/navbar/NavBar";
+import Scroll from "components/common/scroll/Scroll";
+import TabControl from "components/content/tabControl/TabControl";
+import GoodsList from "components/content/goods/CoodsList";
+import BackTop from "components/content/backTop/BackTop";
 
-import NavBar from 'components/common/navbar/NavBar'
-import TabControl from 'components/content/tabControl/TabControl'
-import GoodsList from 'components/content/goods/CoodsList'
-
-import HomeSwiper from 'views/home/childComps/HomeSwiper'
-import RecommendView from 'views/home/childComps/RecommendView'
-import Feature from 'views/home/childComps/Feature'
-
+import HomeSwiper from "views/home/childComps/HomeSwiper";
+import RecommendView from "views/home/childComps/RecommendView";
+import Feature from "views/home/childComps/Feature";
 
 export default {
-  name:'home',
-  components:{
+  name: "home",
+  components: {
     NavBar,
+    Scroll,
     TabControl,
     GoodsList,
+    BackTop,
 
     Feature,
     HomeSwiper,
-    RecommendView
+    RecommendView,
   },
-  data(){
+  data() {
     return {
-      banners:null,
-      recommends:null,
-      titles:['流行','新款','精选'],
-      goods:{
-        pop:{page:1,list:[]},
-        new:{page:1,list:[]},
-        sell:{page:1,list:[]}
+      banners: null,
+      recommends: null,
+      titles: ["流行", "新款", "精选"],
+      goods: {
+        pop: { page: 1, list: [] },
+        new: { page: 1, list: [] },
+        sell: { page: 1, list: [] },
       },
-      list:[], // 商品数据
-    }
+      list: [], // 商品数据
+    };
   },
-  created(){
+  created() {
+    console.log('store:',window.$store.state.cs)
     // 发送请求 获取数据
-    this.getPop()
-    this.getNew()
-    this.getSell()
-    this.list = this.goods['pop'].list
+    this.getPop();
+    this.getNew();
+    this.getSell();
+    this.list = this.goods["pop"].list;
+
+
   },
-  methods:{
+  mounted(){
+    // this.$refs.homeScroll.scrollRefresh()
+  },
+  methods: {
     /** 请求相关 */
-    getPop(){ // 获取流行数据
+    getPop() {
+      // 获取流行数据
       let dat = [
-        {id:1,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:2,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:3,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:4,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:5,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:6,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:11,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:12,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:13,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:14,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:15,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10},
-        {id:16,img:require("assets/img/221307-15784063870d2e.jpg"),title:'大范甘迪发-流行',price:'118.00',cfav:10}
-      ]
-      this.goods['pop'].list.push(...dat.map(item=>{item.id += Math.random();return item}))
-      this.goods['pop'].page++
+        {
+          id: 1,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 2,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 3,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 4,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 5,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 6,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 11,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 12,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 13,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 14,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 15,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 16,
+          img: require("assets/img/221307-15784063870d2e.jpg"),
+          title: "大范甘迪发-流行",
+          price: "118.00",
+          cfav: 10,
+        },
+      ];
+      this.goods["pop"].list.push(
+        ...dat.map((item) => {
+          item.id += Math.random();
+          return item;
+        })
+      );
+      this.goods["pop"].page++;
     },
-    getNew(){ // 获取新款数据
+    getNew() {
+      // 获取新款数据
       let dat = [
-        {id:972,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:981,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:991,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:956,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:919,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:918,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:971,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:982,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:992,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:910,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:914,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:912,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:970,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:980,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:990,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:913,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:911,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10},
-        {id:915,img:require("assets/img/190334-154737741421ca.jpg"),title:'东风浩荡-新款',price:'118.00',cfav:10}
-      ]
-      this.goods['new'].list.push(...dat.map(item=>{item.id += Math.random();return item}))
-      this.goods['new'].page++
+        {
+          id: 972,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 981,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 991,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 956,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 919,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 918,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 971,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 982,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 992,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 910,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 914,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 912,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 970,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 980,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 990,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 913,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 911,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 915,
+          img: require("assets/img/190334-154737741421ca.jpg"),
+          title: "东风浩荡-新款",
+          price: "118.00",
+          cfav: 10,
+        },
+      ];
+      this.goods["new"].list.push(
+        ...dat.map((item) => {
+          item.id += Math.random();
+          return item;
+        })
+      );
+      this.goods["new"].page++;
     },
-    getSell(){ // 获取精选数据
+    getSell() {
+      // 获取精选数据
       let dat = [
-        {id:121,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:122,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:123,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:124,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:125,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:126,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:127,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:128,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:129,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:130,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:131,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:132,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:133,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:134,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:135,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:136,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:137,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10},
-        {id:138,img:require("assets/img/124035-1526272835360d.jpg"),title:'浮光动宫观-精选',price:'118.00',cfav:10}
-      ]
-      this.goods['sell'].list.push(...dat.map(item=>{item.id += Math.random();return item}))
-      this.goods['sell'].page++
+        {
+          id: 121,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 122,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 123,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 124,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 125,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 126,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 127,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 128,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 129,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 130,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 131,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 132,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 133,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 134,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 135,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 136,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 137,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+        {
+          id: 138,
+          img: require("assets/img/124035-1526272835360d.jpg"),
+          title: "浮光动宫观-精选",
+          price: "118.00",
+          cfav: 10,
+        },
+      ];
+      this.goods["sell"].list.push(
+        ...dat.map((item) => {
+          item.id += Math.random();
+          return item;
+        })
+      );
+      this.goods["sell"].page++;
     },
 
     /** 事件监听 */
-    typeClick(type){// 切换商品类型
-      let arr = ['pop','new','sell']
-      this.list = this.goods[arr[type]].list
+    typeClick(type) {
+      // 切换商品类型
+      let arr = ["pop", "new", "sell"];
+      this.list = this.goods[arr[type]].list;
+    },
+
+    topClick(){ // 回到顶部
+      this.$refs.homeScroll.scrollTo()
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-  .home{
-    padding: 44px 0 50px;
-  }
-  .home-nav{
-    background-color: var(--color-tint);
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
+/* vh 视口高度 */
+.home {
+  /* margin-top: 44px; 100vh*/
+  height: 100vh;
+   /* overflow: hidden; */
+}
+.home-nav {
+  background-color: var(--color-tint);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
 
-  /* 实现吸顶效果 
+/* 实现吸顶效果 
     position: sticky;  当top值>= 44px 后 sticky会变成fixed效果
     top: 44px;
   */
-  .tab-control{
-    background-color: white;
-    position: sticky;
-    top: 44px;
-  }
+.tab-control {
+  background-color: white;
+  position: sticky;
+  top: 44px;
+}
+
+.homeContent{
+  /* height: calc(100% - 93px) ;
+  margin-top: 44px; */
+  overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+}
 </style>

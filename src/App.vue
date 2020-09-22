@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <router-view/>
 
     <main-tab-bar/>
@@ -16,7 +15,6 @@ export default {
 </script>
 
 <style>
-
 /* @import './assets/css/reset.css'; */
 @import 'assets/css/base.css';
 
