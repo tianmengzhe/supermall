@@ -91,7 +91,7 @@ export default {
   //     console.log('img isImgLoad')
   //     return this.$store.state.imgLoad
   //   }
-  // },
+  // }, 
   watch:{
     '$store.state.imgLoad'(){
       this.scrollRefresh()
