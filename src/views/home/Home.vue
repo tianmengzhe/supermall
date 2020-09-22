@@ -5,7 +5,7 @@
     </div>
 
  
-    <scroll ref="homeScroll" class="homeContent" >
+    <scroll ref="homeScroll" class="homeContent" :probe-type="3" @scroll='scroll'>
 
       <home-swiper />
       <recommend-view />
@@ -15,7 +15,7 @@
 
     </scroll>
 
-    <back-top @click.native="topClick" />
+    <back-top @click.native="topClick" v-show="isTop" />
     <!-- 
       数据展示设计
       
@@ -58,6 +58,7 @@ export default {
         sell: { page: 1, list: [] },
       },
       list: [], // 商品数据
+      isTop:false
     };
   },
   created() {
@@ -454,7 +455,9 @@ export default {
       let arr = ["pop", "new", "sell"];
       this.list = this.goods[arr[type]].list;
     },
-
+    scroll(pos){
+      this.isTop = -pos.y > 340
+    },
     topClick(){ // 回到顶部
       this.$refs.homeScroll.scrollTo()
     }

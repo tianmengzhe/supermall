@@ -1,6 +1,5 @@
 <template>
   <div class="scroll" ref="wrapper">
-    <!-- :style="{height:height+'px'}"  -->
     <div class="content">
       <slot></slot>
     </div>
@@ -12,9 +11,9 @@ import BScroll from "better-scroll";
 export default {
   name: "scroll",
   props: {
-    height: {
-      type: [Number, String],
-      default: 1200,
+    probeType: {
+      type: Number,
+      default: 0, // 0 1 2 3
     },
   },
   data() {
@@ -24,7 +23,7 @@ export default {
   },
   mounted() {
     this.bScroll = new BScroll(this.$refs.wrapper, {
-      probeType: 3,
+      probeType: this.probeType,
       pullUpLoad: true,
       click: true
     });
@@ -36,9 +35,10 @@ export default {
 
     // bScroll 滚动高度不能变化
 
-    //     this.bScroll.on("scroll", (position) => {
-    //       console.log(position);
-    //     });
+    // 监听滚动
+    this.bScroll.on("scroll", (position) => {
+      this.$emit('scroll',position)
+    });
   },
   methods:{
     scrollRefresh(){
