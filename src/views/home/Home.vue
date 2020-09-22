@@ -78,13 +78,15 @@ export default {
     this.list = this.goods[this.goodsType].list;
 
 
-    // 监听goodsItem 图片加载完成
-    this.$bus.$on('imgLoad',()=>{
-      this.scrollRefresh()
-    })
+    
   },
   mounted(){
-    // this.$refs.homeScroll.scrollRefresh()
+    // 监听goodsItem 图片加载完成
+    const scrollRefresh = this.debounce(this.scrollRefresh)
+    this.$bus.$on('imgLoad',()=>{
+      // this.scrollRefresh()
+      scrollRefresh()
+    })
   },
   // computed:{
   //   isImgLoad(){
@@ -490,9 +492,21 @@ export default {
     topClick(){ // 回到顶部
       this.$refs.homeScroll.scrollTo()
     },
-    scrollRefresh(){
+    scrollRefresh(){ 
       this.$refs.homeScroll.refresh()
+    },
+
+    // 防抖处理
+    debounce(func, delay=300){
+      let timer = null
+      return function( ...args){
+        timer && clearTimeout(timer)
+        timer = setTimeout(()=>{
+          func.call(this, ...args)
+        }, delay)
+      }
     }
+    
   },
 };
 </script>

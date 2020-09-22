@@ -55,14 +55,11 @@ export default {
     });
   },
   methods:{
-    scrollRefresh(){
-      this.bScroll.refresh() // 刷新bScroll 重新计算scrollerHeight
-    },
     scrollTo(x=0, y=0, time=500){
       this.bScroll.scrollTo(x, y, time)
     },
     refresh(){
-      this.bScroll.refresh()
+      this.bScroll && this.bScroll.refresh() // 刷新bScroll 重新计算scrollerHeight
     }
   }
 };
