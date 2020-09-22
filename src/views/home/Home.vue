@@ -4,17 +4,23 @@
       <nav-bar><div slot="center">购物街</div></nav-bar>
     </div>
 
- 
-    <scroll ref="homeScroll" class="homeContent" :probe-type="3" @scroll='scroll'>
+    <!-- 滚动区域封装 -->
+    <scroll ref="homeScroll" class="homeContent" :pull-up-load="true" :probe-type="3" @scroll='scroll' @pullingUp="loadMore">
 
-      <home-swiper />
+      <!-- 轮播图 -->
+      <home-swiper /> 
+      <!-- 推荐 -->
       <recommend-view />
+      <!-- 流行内容区域 -->
       <feature />
+      <!-- 选项 -->
       <tab-control class="tab-control" :titles="titles" @typeClick="typeClick" />
+      <!-- 商品列表 -->
       <goods-list :goods="list" />    
 
     </scroll>
 
+    <!-- 回到顶部 -->
     <back-top @click.native="topClick" v-show="isTop" />
     <!-- 
       数据展示设计
@@ -34,6 +40,7 @@ import HomeSwiper from "views/home/childComps/HomeSwiper";
 import RecommendView from "views/home/childComps/RecommendView";
 import Feature from "views/home/childComps/Feature";
 
+import { mapState } from 'vuex'
 export default {
   name: "home",
   components: {
@@ -53,10 +60,11 @@ export default {
       recommends: null,
       titles: ["流行", "新款", "精选"],
       goods: {
-        pop: { page: 1, list: [] },
-        new: { page: 1, list: [] },
-        sell: { page: 1, list: [] },
+        Pop: { page: 1, list: [] },
+        New: { page: 1, list: [] },
+        Sell: { page: 1, list: [] },
       },
+      goodsType:'Pop',
       list: [], // 商品数据
       isTop:false
     };
@@ -67,12 +75,27 @@ export default {
     this.getPop();
     this.getNew();
     this.getSell();
-    this.list = this.goods["pop"].list;
+    this.list = this.goods[this.goodsType].list;
 
 
+    // 监听goodsItem 图片加载完成
+    this.$bus.$on('imgLoad',()=>{
+      this.scrollRefresh()
+    })
   },
   mounted(){
     // this.$refs.homeScroll.scrollRefresh()
+  },
+  // computed:{
+  //   isImgLoad(){
+  //     console.log('img isImgLoad')
+  //     return this.$store.state.imgLoad
+  //   }
+  // },
+  watch:{
+    '$store.state.imgLoad'(){
+      this.scrollRefresh()
+    }
   },
   methods: {
     /** 请求相关 */
@@ -164,13 +187,13 @@ export default {
           cfav: 10,
         },
       ];
-      this.goods["pop"].list.push(
+      this.goods["Pop"].list.push(
         ...dat.map((item) => {
           item.id += Math.random();
           return item;
         })
       );
-      this.goods["pop"].page++;
+      this.goods["Pop"].page++;
     },
     getNew() {
       // 获取新款数据
@@ -302,13 +325,13 @@ export default {
           cfav: 10,
         },
       ];
-      this.goods["new"].list.push(
+      this.goods["New"].list.push(
         ...dat.map((item) => {
           item.id += Math.random();
           return item;
         })
       );
-      this.goods["new"].page++;
+      this.goods["New"].page++;
     },
     getSell() {
       // 获取精选数据
@@ -440,26 +463,35 @@ export default {
           cfav: 10,
         },
       ];
-      this.goods["sell"].list.push(
+      this.goods["Sell"].list.push(
         ...dat.map((item) => {
           item.id += Math.random();
           return item;
         })
       );
-      this.goods["sell"].page++;
+      this.goods["Sell"].page++;
     },
 
     /** 事件监听 */
     typeClick(type) {
       // 切换商品类型
-      let arr = ["pop", "new", "sell"];
+      let arr = ["Pop", "New", "Sell"];
+      this.goodsType = arr[type]
       this.list = this.goods[arr[type]].list;
     },
     scroll(pos){
       this.isTop = -pos.y > 340
     },
+    loadMore(finishPullUp){ // 上拉加载更多
+      console.log('上拉加载更多')
+      this['get'+this.goodsType]()
+      finishPullUp()
+    },
     topClick(){ // 回到顶部
       this.$refs.homeScroll.scrollTo()
+    },
+    scrollRefresh(){
+      this.$refs.homeScroll.refresh()
     }
   },
 };

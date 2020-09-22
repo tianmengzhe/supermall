@@ -6,6 +6,7 @@
       </div>  
 
       <!-- 点 -->
+      <div class="dots"></div>
       
   </div>
 </template>
