@@ -1,9 +1,9 @@
 <template>
-  <div class="goodsItem">
+  <div class="goodsItem" @click="goodsClick(item.id)">
     <img :src="item.img" alt @load="imgLoad(item.id)" />
     <div>
       <div class="title">{{item.title}}</div>
-      <span class="price">{{item.price}}</span>
+      <span class="price">￥{{item.price}}</span>
       <span class="cfav">{{item.cfav}}</span>
     </div>
   </div>
@@ -27,7 +27,6 @@ export default {
       // this.$emit
       // 在home.vue组件调用方法
 
-
       // 使用vuex
       // this.isload += 1
       // this.$store.commit('setImgLoad', id)
@@ -38,6 +37,10 @@ export default {
       this.$bus.$emit('imgLoad') // 发射
       // this.$bus.$on('imgLoad',()=>{}) // 监听
 
+    },
+    goodsClick(id){
+      // 跳转详情页  this.item.id
+      this.$router.push({name:'detail',params:{id}})
     }
   }
 };
@@ -46,8 +49,12 @@ export default {
 <style scoped>
 .goodsItem{
     width: 48%;
+    font-size: 14px;
 }
 img{
     width: 100%;
+}
+.cfav{
+  margin-left: 15px;
 }
 </style>

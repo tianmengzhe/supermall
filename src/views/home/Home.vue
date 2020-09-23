@@ -81,7 +81,6 @@ export default {
     this.getNew();
     this.getSell();
     this.list = this.goods[this.goodsType].list;
-    
   },
   mounted(){
     // 监听goodsItem 图片加载完成
@@ -101,10 +100,10 @@ export default {
   // }, 
   activated(){ // 进入路由
     this.$refs.homeScroll.scrollTo(0,this.saveY)
+    this.scrollRefresh() //进行刷新 重新计算滚动高度
   },
   deactivated(){ // 离开路由 记录滚动距离
     this.saveY = this.$refs.homeScroll.scrollY()
-    this.scrollRefresh()
   },
   watch:{
     '$store.state.imgLoad'(){
