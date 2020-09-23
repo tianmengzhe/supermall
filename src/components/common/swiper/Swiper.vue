@@ -2,7 +2,7 @@
   <div>
       <!-- 图片 -->
       <div class="imgList">
-        <slot name='img'></slot>
+        <slot></slot>
       </div>  
 
       <!-- 点 -->
@@ -18,5 +18,7 @@ export default {
 </script>
 
 <style scoped>
-
+.imgList{
+  display: flex;
+}
 </style>

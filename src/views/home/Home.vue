@@ -4,17 +4,20 @@
       <nav-bar><div slot="center">购物街</div></nav-bar>
     </div>
 
+    <!-- 吸顶实现  在better-scroll里面fixed无法实现效果 使用障眼法 -->
+    <tab-control ref="tabControl1" class="tab-control fixed" v-show="isTabFixed" :titles="titles" @typeClick="typeClick" />
+
     <!-- 滚动区域封装 -->
     <scroll ref="homeScroll" class="homeContent" :pull-up-load="true" :probe-type="3" @scroll='scroll' @pullingUp="loadMore">
 
       <!-- 轮播图 -->
-      <home-swiper /> 
+      <home-swiper @swiperImgLoad="swiperImgLoad" /> 
       <!-- 推荐 -->
       <recommend-view />
       <!-- 流行内容区域 -->
       <feature />
       <!-- 选项 -->
-      <tab-control class="tab-control" :titles="titles" @typeClick="typeClick" />
+      <tab-control ref="tabControl" class="tab-control"  :titles="titles" @typeClick="typeClick" />
       <!-- 商品列表 -->
       <goods-list :goods="list" />    
 
@@ -22,10 +25,7 @@
 
     <!-- 回到顶部 -->
     <back-top @click.native="topClick" v-show="isTop" />
-    <!-- 
-      数据展示设计
-      
-    -->
+
   </div>
 </template>
 
@@ -39,6 +39,8 @@ import BackTop from "components/content/backTop/BackTop";
 import HomeSwiper from "views/home/childComps/HomeSwiper";
 import RecommendView from "views/home/childComps/RecommendView";
 import Feature from "views/home/childComps/Feature";
+
+import {debounce} from 'common/utils'
 
 import { mapState } from 'vuex'
 export default {
@@ -66,7 +68,10 @@ export default {
       },
       goodsType:'Pop',
       list: [], // 商品数据
-      isTop:false
+      isTop: false,
+      tOffsetTop: 0,
+      isTabFixed: false,
+      saveY: 0, // 页面滚动距离
     };
   },
   created() {
@@ -76,17 +81,17 @@ export default {
     this.getNew();
     this.getSell();
     this.list = this.goods[this.goodsType].list;
-
-
     
   },
   mounted(){
     // 监听goodsItem 图片加载完成
-    const scrollRefresh = this.debounce(this.scrollRefresh)
+    const scrollRefresh = debounce(this.scrollRefresh)
     this.$bus.$on('imgLoad',()=>{
       // this.scrollRefresh()
       scrollRefresh()
     })
+
+    // 获取组件的对应dom属性 this.$refs.tabControl.$el
   },
   // computed:{
   //   isImgLoad(){
@@ -94,6 +99,13 @@ export default {
   //     return this.$store.state.imgLoad
   //   }
   // }, 
+  activated(){ // 进入路由
+    this.$refs.homeScroll.scrollTo(0,this.saveY)
+  },
+  deactivated(){ // 离开路由 记录滚动距离
+    this.saveY = this.$refs.homeScroll.scrollY()
+    this.scrollRefresh()
+  },
   watch:{
     '$store.state.imgLoad'(){
       this.scrollRefresh()
@@ -475,14 +487,24 @@ export default {
     },
 
     /** 事件监听 */
-    typeClick(type) {
+    typeClick(index) {
       // 切换商品类型
       let arr = ["Pop", "New", "Sell"];
-      this.goodsType = arr[type]
-      this.list = this.goods[arr[type]].list;
+      this.goodsType = arr[index]
+      this.list = this.goods[arr[index]].list;
+     
+      // 类型同步
+      this.$refs.tabControl1.actIndex = index
+      this.$refs.tabControl.actIndex = index
+
+      // 回到商品第一列 如果在滚动到下面
+      let top = this.$refs.tabControl.$el.offsetTop // -531
+      this.isTabFixed && this.$refs.homeScroll.scrollTo(0, -top, 0)
     },
-    scroll(pos){
-      this.isTop = -pos.y > 340
+    scroll(pos){ //滚动监听
+      this.isTop = -pos.y > 340; // 回到顶部
+      this.isTabFixed = -pos.y > this.tOffsetTop // 吸顶效果 
+      // this.saveY = pos.y
     },
     loadMore(finishPullUp){ // 上拉加载更多
       console.log('上拉加载更多')
@@ -493,18 +515,10 @@ export default {
       this.$refs.homeScroll.scrollTo()
     },
     scrollRefresh(){ 
-      this.$refs.homeScroll.refresh()
+      this.$refs.homeScroll && this.$refs.homeScroll.refresh && this.$refs.homeScroll.refresh()
     },
-
-    // 防抖处理
-    debounce(func, delay=300){
-      let timer = null
-      return function( ...args){
-        timer && clearTimeout(timer)
-        timer = setTimeout(()=>{
-          func.call(this, ...args)
-        }, delay)
-      }
+    swiperImgLoad(){ // 轮播图加载完成 
+      this.tOffsetTop = this.$refs.tabControl.$el.offsetTop
     }
     
   },
@@ -534,8 +548,13 @@ export default {
   */
 .tab-control {
   background-color: white;
-  position: sticky;
-  top: 44px;
+  /* position: sticky; 使用better-scroll 滚动导致该属性无效
+   top: 44px; */
+}
+.tab-control.fixed{
+  position: relative;
+  margin-top: 44px;
+  z-index: 1;
 }
 
 .homeContent{

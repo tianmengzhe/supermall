@@ -15,10 +15,10 @@ export default {
   data() {
     return {
       list: [
-        { id: 1, link: "", img: "", title: "推荐部分" },
-        { id: 2, link: "", img: "", title: "推荐部分" },
-        { id: 3, link: "", img: "", title: "推荐部分" },
-        { id: 4, link: "", img: "", title: "推荐部分" },
+        { id: 1, link: "", img: require("assets/img/221307-15784063870d2e.jpg"), title: "推荐部分1" },
+        { id: 2, link: "", img: require("assets/img/221307-15784063870d2e.jpg"), title: "推荐部分2" },
+        { id: 3, link: "", img: require("assets/img/221307-15784063870d2e.jpg"), title: "推荐部分3" },
+        { id: 4, link: "", img: require("assets/img/221307-15784063870d2e.jpg"), title: "推荐部分4" },
       ],
     };
   },
@@ -34,5 +34,10 @@ export default {
 .r-item {
   text-align: center;
   flex: 1;
+}
+.recommend img{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 </style>

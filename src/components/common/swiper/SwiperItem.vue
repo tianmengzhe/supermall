@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="imgli">
       <!-- 轮播图图片部分 -->
       <slot></slot>
   </div>
@@ -11,6 +11,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.imgli img{
+  width: 100vw;
+  height: 200px;
+}
 </style>
