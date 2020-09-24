@@ -23,9 +23,12 @@
 
 <script>
 export default {
+    props:{
+        id:String
+    },
     methods:{
         joinCar(){
-
+            this.$store.commit('addCart',{id:this.id})
         },
         buy(){
             

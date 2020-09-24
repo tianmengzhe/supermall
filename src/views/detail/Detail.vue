@@ -25,7 +25,7 @@
     </scroll>
 
     <!-- 底部工具栏 -->
-    <detail-bottom-bar class="bottom" />
+    <detail-bottom-bar :id="id" class="bottom" />
 
     <!-- 回到顶部 -->
     <back-top @click.native="topClick" v-show="isTop" />
