@@ -28,7 +28,7 @@ export default {
     },
     methods:{
         joinCar(){
-            this.$store.commit('addCart',{id:this.id})
+            this.$store.dispatch('addCart',{id:this.id})
         },
         buy(){
             
