@@ -13,7 +13,12 @@
 
 <script>
 export default {
-
+  props:{
+    dots:{
+      type: Boolean,
+      default: true
+    }
+  }
 }
 </script>
 

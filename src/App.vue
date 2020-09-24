@@ -1,8 +1,8 @@
 <template>
   <div id="app">
 
-    <!-- 不销毁组件 -->
-    <keep-alive>
+    <!-- 不销毁组件 排除detail组件-->
+    <keep-alive exclude="detail">
       <router-view/>
     </keep-alive>
     

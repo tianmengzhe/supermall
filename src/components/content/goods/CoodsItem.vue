@@ -34,8 +34,18 @@ export default {
 
       // 事件总线
       // Vue.prototype.$bus = new Vue(); ---> 使用一个vue实例
-      this.$bus.$emit('imgLoad') // 发射
+      // this.$bus.$emit('imgLoad') // 发射
       // this.$bus.$on('imgLoad',()=>{}) // 监听
+
+
+      // 判断发射时间给谁  home detail  
+      // 也可以在对应页面 取消监听 激活添加监听  this.$bus.$off('imgLoad',处理函数)
+      // 通过路由判断  
+      if(this.$route.path.indexOf('/home') !== -1){
+        this.$bus.$emit('imgLoad')
+      }else if(this.$route.path.indexOf('/detail') !== -1){
+        this.$bus.$emit('imgdLoad')
+      }
 
     },
     goodsClick(id){
