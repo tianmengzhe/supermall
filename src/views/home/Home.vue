@@ -34,14 +34,14 @@ import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/CoodsList";
-import BackTop from "components/content/backTop/BackTop";
+// import BackTop from "components/content/backTop/BackTop";
 
 import HomeSwiper from "views/home/childComps/HomeSwiper";
 import RecommendView from "views/home/childComps/RecommendView";
 import Feature from "views/home/childComps/Feature";
 
 import {debounce} from 'common/utils'
-import {itemLiatenerMixin} from 'common/mixin'
+import {itemLiatenerMixin, backTop} from 'common/mixin'
 
 import { mapState } from 'vuex'
 export default {
@@ -51,7 +51,7 @@ export default {
     Scroll,
     TabControl,
     GoodsList,
-    BackTop,
+    // BackTop,
 
     Feature,
     HomeSwiper,
@@ -69,7 +69,7 @@ export default {
       },
       goodsType:'Pop',
       list: [], // 商品数据
-      isTop: false,
+      // isTop: false,
       tOffsetTop: 0,
       isTabFixed: false,
       saveY: 0, // 页面滚动距离
@@ -83,7 +83,7 @@ export default {
     this.getSell();
     this.list = this.goods[this.goodsType].list;
   },
-  mixins: [itemLiatenerMixin], // 注入混入
+  mixins: [itemLiatenerMixin, backTop('homeScroll')], // 注入混入
   mounted(){
     // 监听goodsItem 图片加载完成
     // const scrollRefresh = debounce(this.scrollRefresh)
@@ -513,9 +513,9 @@ export default {
       this['get'+this.goodsType]()
       finishPullUp()
     },
-    topClick(){ // 回到顶部
-      this.$refs.homeScroll.scrollTo()
-    },
+    // topClick(){ // 回到顶部  使用混入
+    //   this.$refs.homeScroll.scrollTo()
+    // },
     scrollRefresh(){ 
       this.$refs.homeScroll && this.$refs.homeScroll.refresh && this.$refs.homeScroll.refresh()
     },

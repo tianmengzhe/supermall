@@ -21,10 +21,14 @@
       <!-- 评论 -->
       <detail-comment ref="comment" :info="commentInfo" />
       <!-- 推荐  -->
-      <goods-list :goods="recommendInfo" />
+      <goods-list ref="recommend" :goods="recommendInfo" />
     </scroll>
 
-    <!-- 底部组件 -->
+    <!-- 底部工具栏 -->
+    <detail-bottom-bar class="bottom" />
+
+    <!-- 回到顶部 -->
+    <back-top @click.native="topClick" v-show="isTop" />
   </div>
 </template>
 
@@ -40,14 +44,18 @@ import DetailParamsInfo from "views/detail/childComps/DetailParamsInfo";
 import DetailComment from "views/detail/childComps/DetailComment";
 // import DetailRecommend from "views/detail/childComps/DetailRecommend";
 import DetailImgInfo from "views/detail/childComps/DetailImgInfo";
+import DetailBottomBar from "views/detail/childComps/DetailBottomBar";
+
 
 import { debounce } from "common/utils";
 import { getData } from "network/detail";
+import { backTop} from 'common/mixin'
 
 export default {
   name: "detail",
   components: {
     Scroll,
+
     DetailNavBar,
     DetailSwiper,
     DetailInfo,
@@ -56,6 +64,7 @@ export default {
     DetailComment,
     DetailImgInfo,
     GoodsList,
+    DetailBottomBar,
   },
   data() {
     return {
@@ -67,6 +76,8 @@ export default {
       goodsParams: {}, // 商品参数
       commentInfo: {}, // 评论信息
       recommendInfo: [], // 推荐数据
+      topYs: [],
+      nindex: 0
     };
   },
   created() {
@@ -167,35 +178,54 @@ export default {
           cfav: 10,
         },
       ];
-      console.log(onj);
+      //   console.log(onj);
+
+      // 页面dom加载完成 图片还未加载完成
+      // this.$nextTick(()=>{ this.getTopYs() })
     });
   },
+  mixins: [ backTop('detailScroll') ], // 注入混入
   mounted() {
-    const scrollRefresh = debounce(this.scrollRefresh);
-    this.$bus.$on("imgdLoad", () => {
-      scrollRefresh();
+    const scrollRefresh = debounce(()=>{
+        this.scrollRefresh()
+        this.getTopYs()
+        console.log(this.topYs)
     });
+    this.$bus.$on("imgdLoad", () => { scrollRefresh(); });
   },
   methods: {
+    getTopYs(){
+        this.topYs = []
+        this.topYs.push(0)
+        this.topYs.push(this.$refs.params.$el.offsetTop)
+        this.topYs.push(this.$refs.comment.$el.offsetTop)
+        this.topYs.push(this.$refs.recommend.$el.offsetTop)
+    },
     navClick(i) {
-      // 导航点击
-      // 滚动到对应位置
-      // this.$refs.navbar.tindex
+      // 导航点击 滚动到对应位置
+      this.$refs.detailScroll.scrollTo(0, -this.topYs[i], 100)
     },
-    scroll(pos) {
-      // 滚动监听
+    scroll(pos) { // 滚动监听
+        this.isTop = -pos.y > 340; // 回到顶部
+      this.moveScroll(Math.abs(pos.y))
     },
-    loadMore(finishPullUp) {
-      // 上拉加载更多
-      console.log('上拉加载更多')
+    moveScroll(y){ // 处理滚动到一定距离 显示对应的导航信息
+        let len = this.topYs.length
+        for(let i = 0; i < len; i++){
+            // this.nindex !== i  防止赋值过于频繁
+            if(this.nindex !== i && ((i < len-1 && y >= this.topYs[i] && y < this.topYs[i+1]) || (i === len-1 && y >= this.topYs[i]))){
+            // 简化 在数组添加一个 最大值 然后直接判断 是否在区间内
+               this.nindex = i
+            }
+        }
+        this.$refs.navbar.tindex = this.nindex
+    },
+    loadMore(finishPullUp) {  // 上拉加载更多
       this.scrollRefresh();
       finishPullUp();
     },
     scrollRefresh() {
-    
-      this.$refs.detailScroll &&
-        this.$refs.detailScroll.refresh &&
-        this.$refs.detailScroll.refresh();
+      this.$refs.detailScroll && this.$refs.detailScroll.refresh && this.$refs.detailScroll.refresh();
     },
   },
 };
@@ -210,15 +240,23 @@ export default {
   background-color: white;
 }
 .detail-nav {
-  background-color: var(--color-tint);
-  color: white;
+  /* background-color: var(--color-tint); */
+  /* color: white; */
 }
 .detailContent {
   overflow: hidden;
   position: absolute;
   top: 44px;
-  bottom: 0px;
+  bottom: 49px;
   left: 0;
   right: 0;
+}
+.bottom{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 49px;
+    box-shadow: 0 0px 3px 0px rgba(0, 0, 0, .2);
 }
 </style>
