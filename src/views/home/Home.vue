@@ -41,6 +41,7 @@ import RecommendView from "views/home/childComps/RecommendView";
 import Feature from "views/home/childComps/Feature";
 
 import {debounce} from 'common/utils'
+import {itemLiatenerMixin} from 'common/mixin'
 
 import { mapState } from 'vuex'
 export default {
@@ -82,13 +83,15 @@ export default {
     this.getSell();
     this.list = this.goods[this.goodsType].list;
   },
+  mixins: [itemLiatenerMixin], // 注入混入
   mounted(){
     // 监听goodsItem 图片加载完成
-    const scrollRefresh = debounce(this.scrollRefresh)
-    this.$bus.$on('imgLoad',()=>{
-      // this.scrollRefresh()
-      scrollRefresh()
-    })
+    // const scrollRefresh = debounce(this.scrollRefresh)
+    // this.$bus.$on('imgLoad',()=>{
+    //   // this.scrollRefresh()
+    //   scrollRefresh()
+    // })
+    // 使用混入 mixin
 
     // 获取组件的对应dom属性 this.$refs.tabControl.$el
   },
