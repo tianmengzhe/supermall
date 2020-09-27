@@ -25,16 +25,20 @@
     </scroll>
 
     <!-- 底部工具栏 -->
-    <detail-bottom-bar :id="id" class="bottom" />
+    <detail-bottom-bar :id="id" class="bottom" @addCar="addCar"/>
 
     <!-- 回到顶部 -->
     <back-top @click.native="topClick" v-show="isTop" />
+
+    <!-- 弹窗 -->
+    <!-- <toast ref='toast' /> -->
   </div>
 </template>
 
 <script>
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/CoodsList";
+// import Toast from "components/common/toast/Toast";
 
 import DetailNavBar from "views/detail/childComps/DetailNavBar";
 import DetailSwiper from "views/detail/childComps/DetailSwiper";
@@ -46,15 +50,18 @@ import DetailComment from "views/detail/childComps/DetailComment";
 import DetailImgInfo from "views/detail/childComps/DetailImgInfo";
 import DetailBottomBar from "views/detail/childComps/DetailBottomBar";
 
-
+import { mapActions } from "vuex";
 import { debounce } from "common/utils";
 import { getData } from "network/detail";
 import { backTop} from 'common/mixin'
+import { ADD_CART } from 'store/const'
 
 export default {
   name: "detail",
   components: {
     Scroll,
+    GoodsList,
+    // Toast,
 
     DetailNavBar,
     DetailSwiper,
@@ -63,7 +70,6 @@ export default {
     DetailParamsInfo,
     DetailComment,
     DetailImgInfo,
-    GoodsList,
     DetailBottomBar,
   },
   data() {
@@ -194,6 +200,7 @@ export default {
     this.$bus.$on("imgdLoad", () => { scrollRefresh(); });
   },
   methods: {
+    ...mapActions(['addCart']),
     getTopYs(){
         this.topYs = []
         this.topYs.push(0)
@@ -227,6 +234,17 @@ export default {
     scrollRefresh() {
       this.$refs.detailScroll && this.$refs.detailScroll.refresh && this.$refs.detailScroll.refresh();
     },
+
+    addCar(){ //添加到购物车
+        // this.$store.dispatch('addCart',{id:this.id,title:'商品名称',introduce:'介绍',price:'99',checked:false})
+        this.addCart({id:this.id,title:'商品名称',introduce:'介绍',price:'99',checked:false}).then(res=>{
+          // this.$refs.toast.show(' 添加成功')
+          this.$toast.show(' 添加成功')
+        },err=>{ // 添加失败
+          // this.$refs.toast.show(' 添加失败')
+        })
+
+    }
   },
 };
 </script>

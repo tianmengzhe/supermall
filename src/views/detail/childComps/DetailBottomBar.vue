@@ -23,12 +23,10 @@
 
 <script>
 export default {
-    props:{
-        id:String
-    },
     methods:{
         joinCar(){
-            this.$store.dispatch('addCart',{id:this.id})
+            // this.$store.dispatch('addCart',{id:this.id})
+            this.$emit('addCar')
         },
         buy(){
             
